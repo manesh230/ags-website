@@ -113,8 +113,11 @@ function flashCartBtn() {
 }
 
 // ===== EMAIL CONFIG =====
-// Emails are sent via the local Node.js SMTP server (email-server.js, port 3001)
-const EMAIL_SERVER   = 'http://localhost:3001/send-order-email';
+// Locally: calls the Node email server on port 3001
+// On Vercel (or any deployed host): calls the serverless function at /api/send-order-email
+const EMAIL_SERVER = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001/send-order-email'
+  : '/api/send-order-email';
 const ADMIN_EMAIL    = 'manesh100130@gmail.com';
 
 // ===== CART DRAWER =====
