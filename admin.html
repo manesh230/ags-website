@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGS Admin Panel</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-badge">AGS</span>
+        <span>Admin Panel</span>
+      </div>
+      <h2>Sign In</h2>
+      <p class="login-sub">Access restricted to authorized administrators only.</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="loginUser" placeholder="admin" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-wrap">
+            <input type="password" id="loginPass" placeholder="••••••••" required />
+            <button type="button" class="toggle-pass" id="togglePass">&#128065;</button>
+          </div>
+        </div>
+        <p class="login-error" id="loginError"></p>
+        <button type="submit" class="btn-primary full">Login</button>
+      </form>
+      <a href="index.html" class="back-link">&#8592; Back to Store</a>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN DASHBOARD ===== -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-badge">AGS</span>
+        <span>Admin</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-panel="addProduct">
+          <span class="nav-icon">&#43;</span> Add Product
+        </button>
+        <button class="nav-item" data-panel="manageProducts">
+          <span class="nav-icon">&#128230;</span> Manage Products
+        </button>
+        <button class="nav-item" data-panel="currentOrders">
+          <span class="nav-icon">&#128666;</span> Current Orders
+          <span class="orders-badge" id="ordersBadge" style="display:none;"></span>
+        </button>
+        <a href="index.html" class="nav-item store-link">
+          <span class="nav-icon">&#127978;</span> View Store
+        </a>
+      </nav>
+      <button class="logout-btn" id="logoutBtn">&#128275; Logout</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <div class="dash-header">
+        <h1 id="panelTitle">Add New Product</h1>
+        <div class="dash-meta">
+          <span>Welcome, <strong>Admin</strong></span>
+          <span class="product-count-badge" id="productCount">0 Products</span>
+        </div>
+      </div>
+
+      <!-- ===== ADD PRODUCT PANEL ===== -->
+      <div class="panel" id="addProductPanel">
+        <form class="add-form" id="addProductForm" novalidate>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Product Name <span class="req">*</span></label>
+              <input type="text" id="prodName" placeholder="e.g. Men's Cotton Shirt" required />
+            </div>
+            <div class="form-group">
+              <label>Category <span class="req">*</span></label>
+              <select id="prodCat" required>
+                <option value="">-- Select Category --</option>
+                <option value="clothing">Clothing &amp; Accessories</option>
+                <option value="cosmetics">Cosmetics &amp; Beauty</option>
+                <option value="toys">Toys &amp; Games</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price (PKR) <span class="req">*</span></label>
+              <input type="number" id="prodPrice" placeholder="e.g. 850" min="1" required />
+            </div>
+            <div class="form-group">
+              <label>Stock Quantity <span class="req">*</span></label>
+              <input type="number" id="prodStock" placeholder="e.g. 50" min="0" required />
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Description <span class="req">*</span></label>
+            <textarea id="prodDesc" rows="3" placeholder="Brief product description..." required></textarea>
+          </div>
+
+          <!-- Media Upload -->
+          <div class="form-group full-width">
+            <label>Product Image or Video <span class="req">*</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="prodMedia" accept="image/*,video/*" required />
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <div class="upload-icon">&#128247;</div>
+                <p><strong>Click to upload</strong> or drag &amp; drop</p>
+                <p class="upload-hint">Supports: JPG, PNG, WebP, MP4, WebM (max 50MB)</p>
+              </div>
+              <div class="media-preview" id="mediaPreview" style="display:none;"></div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="reset" class="btn-secondary" id="resetFormBtn">Clear Form</button>
+            <button type="submit" class="btn-primary">&#43; Add Product</button>
+          </div>
+
+          <p class="form-feedback" id="formFeedback"></p>
+
+        </form>
+      </div>
+
+      <!-- ===== MANAGE PRODUCTS PANEL ===== -->
+      <div class="panel" id="manageProductsPanel" style="display:none;">
+
+        <div class="manage-toolbar">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search products..." />
+          </div>
+          <div class="filter-row">
+            <select id="filterCat">
+              <option value="all">All Categories</option>
+              <option value="clothing">Clothing &amp; Accessories</option>
+              <option value="cosmetics">Cosmetics &amp; Beauty</option>
+              <option value="toys">Toys &amp; Games</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="products-table-wrap">
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Media</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- rows injected by JS -->
+            </tbody>
+          </table>
+          <p class="empty-msg" id="emptyMsg" style="display:none;">No products found.</p>
+        </div>
+
+      </div>
+
+      <!-- ===== CURRENT ORDERS PANEL ===== -->
+      <div class="panel" id="currentOrdersPanel" style="display:none;">
+        <div class="orders-toolbar">
+          <span class="orders-summary" id="ordersSummary">Loading orders...</span>
+          <button class="btn-refresh" id="refreshOrdersBtn">&#8635; Refresh</button>
+        </div>
+        <div id="ordersContainer"></div>
+        <p class="empty-msg" id="ordersEmptyMsg" style="display:none;">No pending orders.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===== DELETE CONFIRM MODAL ===== -->
+  <div class="modal-overlay" id="deleteModal" style="display:none;">
+    <div class="modal-box">
+      <h3>Delete Product?</h3>
+      <p>This action cannot be undone. The product will be removed from the store.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="cancelDelete">Cancel</button>
+        <button class="btn-danger" id="confirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
